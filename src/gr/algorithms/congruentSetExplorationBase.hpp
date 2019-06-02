@@ -58,7 +58,7 @@ CongruentSetExplorationBase<Traits, TransformVisitor, PairFilteringFunctor, OptE
         const Sampler& sampler,
         TransformVisitor& v) {
   const Scalar kSmallError = 0.00001;
-  const int kMinNumberOfTrials = 4;
+  const int kMinNumberOfTrials = 20;	/* Modified from 4 by Ben S for M3D. Can't get number_of_trials_ to increase otherwise. Leads to better registration with almost symmetric objects. */
   const Scalar kDiameterFraction = 0.3;
 
 #ifdef TEST_GLOBAL_TIMINGS
