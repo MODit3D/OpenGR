@@ -100,7 +100,11 @@ public:
         /// use a constant default seed by default
         unsigned int randomSeed = std::mt19937::default_seed;
 
-        /// Constraints about transformations
+		//Added by Ben S for M3D. Can't get number_of_trials_ in congruentSetBExplorationBase to increase otherwise.
+		//DEfault (4) is original. Increasing leads to better registration with almost symmetric objects.
+		int MinNumberOfTrials = 4;
+		
+		/// Constraints about transformations
 
         /// Maximum rotation angle. Set negative to ignore
         Scalar max_angle = -1;

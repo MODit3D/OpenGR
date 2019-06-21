@@ -35,7 +35,10 @@ MATCH_BASE_TYPE::MatchBase(const typename MATCH_BASE_TYPE::OptionsType &options,
     , randomGenerator_(options.randomSeed)
     , logger_(logger)
     , options_(options)
-{}
+{
+    qcentroid1_.setZero();
+    qcentroid2_.setZero();
+}
 
 template <typename TransformVisitor, template < class, class > typename ... OptExts>
 MATCH_BASE_TYPE::~MatchBase(){}
