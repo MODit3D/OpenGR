@@ -135,7 +135,7 @@ public:
   inline AngularGrid* angularGrid(const Point& p) {
     const int pId = indexPos(p);
     if (pId == -1) return NULL;
-    return _grid[pId];
+     return _grid[pId];
   }
 
   //! \return the Angular Grid contained in p cell + its n*n neighb
