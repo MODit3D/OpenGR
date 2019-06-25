@@ -149,6 +149,9 @@ namespace gr {
                     IndexedNormalSet3D;
 #endif
 
+            //Added by Ben S: a hard limit on how many neighbors to get for each pair, with RNG for getting to that.
+            constexpr size_t MaxNeighbors = 5;
+            std::mt19937 rng(First_pairs.size() + Second_pairs.size()*7);
 
             if (quadrilaterals == nullptr) return false;
 
@@ -163,7 +166,7 @@ namespace gr {
             const Scalar eps = pcfunctor_.getNormalizedEpsilon(distance_threshold2);
 
             IndexedNormalSet3D nset (eps);
-//observation: decreasing eps appropriately shrinks output, but vastly increases mem consumption.
+
             for (size_t i = 0; i <  First_pairs.size(); ++i) {
                 const Point& p1 = pcfunctor_.points[First_pairs[i].first];
                 const Point& p2 = pcfunctor_.points[First_pairs[i].second];
@@ -197,22 +200,30 @@ namespace gr {
 
                 VectorType invPoint;
                 //const Scalar distance_threshold2s = distance_threshold2 * distance_threshold2;
-                for (unsigned int k = 0; k != std::min(nei.size(), (size_t)2); k++){
+                std::vector<std::pair<unsigned int, unsigned int>> combNew;	//Ben S: insert into separate array for now.
+
+				for (unsigned int k = 0; k != nei.size(); k++){
                     const int id = nei[k];
-//obervation: limiting this loop can speed things up greatly without, so far, a hit on quality of output.
-                    const VectorType& pp1 = mySampled_Q_3D_[First_pairs[id].first].pos();
+
+					const VectorType& pp1 = mySampled_Q_3D_[First_pairs[id].first].pos();
                     const VectorType& pp2 = mySampled_Q_3D_[First_pairs[id].second].pos();
 
                     invPoint = pp1 + (pp2 - pp1) * invariant1;
-//Note - distance below is not sorted. Does it measure favorability?? If so, probably not significantly.
-                    // use also distance_threshold2 for inv 1 and 2 in 4PCS
+
+					// use also distance_threshold2 for inv 1 and 2 in 4PCS
                     if ((queryQ-invPoint).squaredNorm() <= distance_threshold2){
-                        comb.emplace(id, i);
+                        combNew.push_back(make_pair(id, i));
                     }
                 }
-            }
+ 
+                //Ben S: randomly save up to MaxNeighbors additions. Note that though destination is a set, there will be no overlap.
+                shuffle(combNew.begin(), combNew.end(), rng);
 
-            for (std::set< std::pair<unsigned int, unsigned int>>::const_iterator it = comb.cbegin();
+                for(size_t k = 0; k != std::min(combNew.size(), MaxNeighbors); k++)
+                    comb.emplace(combNew[k].first, combNew[k].second);
+			}
+
+			for (std::set< std::pair<unsigned int, unsigned int>>::const_iterator it = comb.cbegin();
                     it != comb.cend(); it++) {
                 const unsigned int & id = (*it).first;
                 const unsigned int & i  = (*it).second;
