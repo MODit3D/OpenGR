@@ -212,7 +212,7 @@ namespace gr {
 
 					// use also distance_threshold2 for inv 1 and 2 in 4PCS
                     if ((queryQ-invPoint).squaredNorm() <= distance_threshold2){
-                        combNew.push_back(make_pair(id, i));
+                        combNew.push_back(std::make_pair(id, i));
                     }
                 }
  
