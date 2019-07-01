@@ -150,7 +150,7 @@ namespace gr {
 #endif
 
             //Added by Ben S: a hard limit on how many neighbors to get for each pair, with RNG for getting to that.
-            constexpr size_t MaxNeighbors = 5;
+            constexpr size_t MaxNeighbors = 8;
             std::mt19937 rng(First_pairs.size() + Second_pairs.size()*7);
 
             if (quadrilaterals == nullptr) return false;
