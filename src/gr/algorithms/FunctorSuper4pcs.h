@@ -163,7 +163,8 @@ namespace gr {
                             (myBase_3D_[3].pos() - myBase_3D_[2].pos()).normalized());
 
             // 1. Datastructure construction
-            const Scalar eps = pcfunctor_.getNormalizedEpsilon(distance_threshold2);
+            const Scalar epsMin = IndexedNormalSet3D::Min_epsilon();
+            const Scalar eps = std::max(pcfunctor_.getNormalizedEpsilon(distance_threshold2), epsMin);
 
             IndexedNormalSet3D nset (eps);
 

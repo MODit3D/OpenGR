@@ -120,9 +120,17 @@ public:
     const int gridDepth = -std::log2(epsilon);
     _egSize = std::pow(2,gridDepth);
     _epsilon = 1.f/_egSize;
-
     _grid = std::vector<AngularGrid*> (std::pow(_egSize, dim), NULL);
   }
+
+  //Added by Ben S: for taming memory usage; this computes a minimum epsilon by inverting the computation in the constructor.
+  static Scalar Min_epsilon(const size_t MaxGridSize = 1 << 25){
+    Scalar epsilon = pow(MaxGridSize, -1.0/dim);
+    Scalar gridDepth = floor(-std::log2(epsilon));
+    Scalar egSize = std::pow(2, gridDepth);
+    return 1.0/egSize;
+  }
+
 
   virtual inline ~IndexedNormalSet();
 
